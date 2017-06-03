@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(!barcode.isOperational()){
+            Toast.makeText(getApplicationContext(), "Sorry, Couldn't setup the detector", Toast.LENGTH_LONG).show();
+            this.finish();
+        }
+
         REQUEST_CODE = 100;
         PERMISSION_REQUEST = 200;
         super.onCreate(savedInstanceState);
