@@ -13,7 +13,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 /**
- * Created by PANDA (and edited by srishti) on 31/5/2017.
+ * Created by PANDA (and srish) on 31/5/2017.
  */
 
 public class Cart extends AppCompatActivity {
@@ -97,6 +97,8 @@ public class Cart extends AppCompatActivity {
         }
 
     }
+
+    /* trying to edit */
 
     @Override
     public void onBackPressed()
