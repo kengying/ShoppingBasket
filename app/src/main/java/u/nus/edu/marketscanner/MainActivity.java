@@ -39,10 +39,12 @@ import java.io.IOException;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private int no_of_item = 9;
+    private int no_of_item = 0;
     private TextView ui_no = null;
     public static  int REQUEST_CODE = 100;
     public static  int PERMISSION_REQUEST = 200;
+    String cartID = null;
+    String cartItemID = null;
 
     SurfaceView cameraView;
     BarcodeDetector barcode;
@@ -51,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            cartID = extras.getString("cartID");
+            cartItemID = extras.getString("cartItemID");
+            no_of_item = extras.getInt("no_of_item");
+        }
+        Log.d("BACKBACK", cartID + " " +cartItemID);
         //stops the app if the barcode reading function does not work
         //why did you place this here? it's already at line 60. if you put this here, the app will be crashing
 //        if(!barcode.isOperational()){
@@ -135,7 +144,11 @@ public class MainActivity extends AppCompatActivity {
                             Button mCancel = (Button) mView.findViewById(R.id.btnCancel);
 
                             mBuilder.setView(mView);
-                            /*TODO  1) IF ADD CREATE USER AND THEN LINK USER WITH PRODUCT  2) SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE   3) IF BARCODE IS NOT VALID ERROR*/
+                            /*TODO
+                                - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE
+                                - IF BARCODE IS NOT VALID ERROR
+                                - CART ICON NOT CHANGING NUMBER
+                                - CANNOT ADD SAME SCANNED ITEM*/
                             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
                             Query query = mDatabase.child(scanned);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -170,6 +183,24 @@ public class MainActivity extends AppCompatActivity {
                             mAdd.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    DatabaseReference mCart;
+                                    DatabaseReference mCartItem = null;
+                                    if(cartID == null && cartItemID == null) {
+                                        mCart = FirebaseDatabase.getInstance().getReference("carts").push();
+                                        mCartItem = FirebaseDatabase.getInstance().getReference("cart_item").push();
+                                        mCartItem.child("item_ID").child("1").setValue(scanned);
+                                        mCartItem.child("cart_ID").setValue(mCart.getKey());
+                                        mCart.child("cart_Status").setValue(0);
+                                        cartID = mCart.getKey();
+                                        cartItemID = mCartItem.getKey();
+                                        no_of_item = 1;
+                                    }
+                                    else{
+                                        no_of_item = no_of_item + 1;
+                                        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("cart_item");
+                                        mDatabase.child(cartItemID).child("item_ID").child(no_of_item+"").setValue(scanned);
+                                        //mCartItem.child("item_ID").child("2").setValue(scanned);
+                                    }
                                     dialog.dismiss();
                                     stop = 0;
                                 }
@@ -202,6 +233,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 cameraSource.stop();
                 Intent i = new Intent(MainActivity.this, Cart.class);
+                i.putExtra("cartID", cartID);
+                i.putExtra("cartItemID", cartItemID);
+                i.putExtra("no_of_item", no_of_item);
                 startActivity(i);
             }
         });

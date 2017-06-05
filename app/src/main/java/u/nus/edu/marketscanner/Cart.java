@@ -17,12 +17,19 @@ import android.widget.TextView;
  */
 
 public class Cart extends AppCompatActivity {
-
+    String cartID;
+    String cartItemID;
+    int no_of_item;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
-
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            cartID = extras.getString("cartID");
+            cartItemID = extras.getString("cartItemID");
+            no_of_item = extras.getInt("no_of_item");
+        }
         init();
     }
 
@@ -44,6 +51,8 @@ public class Cart extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.checkOutButton) {
             Intent i = new Intent(Cart.this, Check_Out.class);
+            i.putExtra("cartID", cartID);
+            i.putExtra("cartItemID", cartItemID);
             startActivity(i);
             return true;
         }
@@ -104,7 +113,11 @@ public class Cart extends AppCompatActivity {
     public void onBackPressed()
     {
         super.onBackPressed();
-        startActivity(new Intent(Cart.this, MainActivity.class));
+        Intent i = new Intent(Cart.this, MainActivity.class);
+        i.putExtra("cartID", cartID);
+        i.putExtra("cartItemID", cartItemID);
+        i.putExtra("no_of_item", no_of_item);
+        startActivity(i);
         finish();
     }
 
