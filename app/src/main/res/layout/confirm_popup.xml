@@ -33,6 +33,7 @@
         android:layout_marginTop="11dp"
         android:layout_marginRight="5dp"
         android:layout_below="@+id/image"
+
         android:layout_alignParentStart="true" />
 
 
@@ -40,10 +41,10 @@
         android:id="@+id/btnAdd"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text=" Add "
         android:layout_marginTop="11dp"
         android:layout_marginRight="5dp"
+        android:layout_toEndOf="@+id/btnCancel"
         android:layout_below="@+id/image"
-        android:layout_alignParentStart="true" />
+        android:text=" Add " />
 
 </RelativeLayout>
