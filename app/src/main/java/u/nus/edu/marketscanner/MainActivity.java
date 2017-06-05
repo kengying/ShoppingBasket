@@ -1,6 +1,7 @@
 package u.nus.edu.marketscanner;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -20,12 +21,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private int no_of_item = 9;
@@ -41,10 +52,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //stops the app if the barcode reading function does not work
-        if(!barcode.isOperational()){
-            Toast.makeText(getApplicationContext(), "Sorry, Couldn't setup the detector", Toast.LENGTH_LONG).show();
-            this.finish();
-        }
+        //why did you place this here? it's already at line 60. if you put this here, the app will be crashing
+//        if(!barcode.isOperational()){
+//            Toast.makeText(getApplicationContext(), "Sorry, Couldn't setup the detector", Toast.LENGTH_LONG).show();
+//            this.finish();
+//        }
 
         REQUEST_CODE = 100;
         PERMISSION_REQUEST = 200;
@@ -100,33 +112,62 @@ public class MainActivity extends AppCompatActivity {
             public void release() {
 
             }
-            /*TODO: Camera error pressing back*/
+
             int stop = 0;
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
 
                 final SparseArray<Barcode> barcodes =  detections.getDetectedItems();
                 if(barcodes.size() > 0 && stop == 0){
+
                     stop = 1;
-//                    Intent intent = new Intent();
-//                    intent.putExtra("barcode", barcodes.valueAt(0));
-//                    final Barcode barcode = barcodes.valueAt(0).displayValue;
-//                    Toast.makeText(getApplicationContext(), barcodes.valueAt(0).displayValue, Toast.LENGTH_LONG).show();
-                     String value = barcodes.valueAt(0).displayValue;
+                    final String scanned = barcodes.valueAt(0).displayValue;
                     Log.d("MainActivity", barcodes.valueAt(0).displayValue);
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
+
                             AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                             View mView = getLayoutInflater().inflate(R.layout.confirm_popup, null);
-                            ImageView image = (ImageView) mView.findViewById(R.id.image);
-                            image.setImageResource(R.drawable.img_crystal);
-                            final TextView mEmail = (TextView) mView.findViewById(R.id.text);
-                            mEmail.setText(barcodes.valueAt(0).displayValue);
-                            Button mLogin = (Button) mView.findViewById(R.id.dialogButtonOK);
+                            final ImageView image = (ImageView) mView.findViewById(R.id.image);
+                            final TextView mName = (TextView) mView.findViewById(R.id.text);
+                            final TextView mPrice = (TextView) mView.findViewById(R.id.price);
+                            Button mAdd = (Button) mView.findViewById(R.id.btnAdd);
+                            Button mCancel = (Button) mView.findViewById(R.id.btnCancel);
+
                             mBuilder.setView(mView);
+                            /*TODO  1) IF ADD CREATE USER AND THEN LINK USER WITH PRODUCT  2) SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE   3) IF BARCODE IS NOT VALID ERROR*/
+                            final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
+                            Query query = mDatabase.child(scanned);
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String imageScanned = dataSnapshot.child("item_Image").getValue(String.class);
+                                    String nameScanned = dataSnapshot.child("item_Name").getValue(String.class);
+                                    String priceScanned = "$" + dataSnapshot.child("item_Price").getValue(Double.class);
+                                    Picasso.with(getApplicationContext())
+                                            .load(imageScanned)
+                                            .into(image);
+                                    mName.setText(nameScanned);
+                                    mPrice.setText(priceScanned);
+                                    //Log.d("QUERY", dataSnapshot.child("item_Image").getValue(String.class));
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                             final AlertDialog dialog = mBuilder.create();
                             dialog.show();
-                            mLogin.setOnClickListener(new View.OnClickListener() {
+                            mCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                    stop = 0;
+                                }
+                            });
+                            mAdd.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     dialog.dismiss();
