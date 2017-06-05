@@ -53,6 +53,7 @@ public class Cart extends AppCompatActivity {
             Intent i = new Intent(Cart.this, Check_Out.class);
             i.putExtra("cartID", cartID);
             i.putExtra("cartItemID", cartItemID);
+            i.putExtra("no_of_item", no_of_item);
             startActivity(i);
             return true;
         }

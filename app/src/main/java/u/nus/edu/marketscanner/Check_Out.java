@@ -14,13 +14,21 @@ import android.widget.TextView;
  */
 
 public class Check_Out extends AppCompatActivity {
-    private int no_of_item = 9;
+    private int no_of_item = 0;
     private TextView ui_no = null;
+    String cartID;
+    String cartItemID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_out);
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            cartID = extras.getString("cartID");
+            cartItemID = extras.getString("cartItemID");
+            no_of_item = extras.getInt("no_of_item");
+        }
     }
 
     @Override
@@ -38,6 +46,9 @@ public class Check_Out extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Check_Out.this, Cart.class);
+                i.putExtra("cartID", cartID);
+                i.putExtra("cartItemID", cartItemID);
+                i.putExtra("no_of_item", no_of_item);
                 startActivity(i);
             }
         });
@@ -64,7 +75,11 @@ public class Check_Out extends AppCompatActivity {
     public void onBackPressed()
     {
         super.onBackPressed();
-        startActivity(new Intent(Check_Out.this, MainActivity.class));
+        Intent i = new Intent(Check_Out.this, MainActivity.class);
+        i.putExtra("cartID", cartID);
+        i.putExtra("cartItemID", cartItemID);
+        i.putExtra("no_of_item", no_of_item);
+        startActivity(i);
         finish();
     }
 }
