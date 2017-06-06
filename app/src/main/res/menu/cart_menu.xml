@@ -6,7 +6,6 @@
         android:id="@+id/cartButton"
         android:icon="@drawable/cart"
         android:orderInCategory="0"
-        android:title="Cart"
         app:actionLayout="@layout/cart_menu"
         app:showAsAction="always" />
 
