@@ -145,10 +145,9 @@ public class MainActivity extends AppCompatActivity {
 
                             mBuilder.setView(mView);
                             /*TODO
-                                - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE
-                                - IF BARCODE IS NOT VALID ERROR
-                                - CART ICON NOT CHANGING NUMBER
-                                - CANNOT ADD SAME SCANNED ITEM*/
+                                - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //IF POSSIBLE
+                                - IF BARCODE IS NOT VALID ERROR //A MUST
+                                - CANNOT ADD SAME SCANNED ITEM // A MUST */
                             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
                             Query query = mDatabase.child(scanned);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                                         mCartItem = FirebaseDatabase.getInstance().getReference("cart_item").push();
                                         mCartItem.child("item_ID").child("1").setValue(scanned);
                                         mCartItem.child("cart_ID").setValue(mCart.getKey());
-                                        mCart.child("cart_Status").setValue(0);
+                                        mCart.child("cart_Status").setValue("true");
                                         cartID = mCart.getKey();
                                         cartItemID = mCartItem.getKey();
                                         no_of_item = 1;
@@ -199,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
                                         no_of_item = no_of_item + 1;
                                         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("cart_item");
                                         mDatabase.child(cartItemID).child("item_ID").child(no_of_item+"").setValue(scanned);
-                                        //mCartItem.child("item_ID").child("2").setValue(scanned);
                                     }
+                                    updateItemCount(no_of_item);
                                     dialog.dismiss();
                                     stop = 0;
                                 }

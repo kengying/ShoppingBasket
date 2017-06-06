@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/checkOutButton"
-        android:icon="@drawable/img_crystal"
+        android:icon="@drawable/credit_card"
         android:title="Check out"
         app:showAsAction="always"
         android:orderInCategory="0"/>
