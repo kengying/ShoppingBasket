@@ -1,68 +1,78 @@
 package u.nus.edu.marketscanner;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Created by PANDA on 31/5/2017.
  */
 
-public class Cart extends Activity {
-    ListView listView1;
-    String contacts[]={"Covfefe","Avocado","Eggs","Milk","Bread"};
+public class Cart extends AppCompatActivity {
+
+    ListView list_view;
+    List<String> list = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
+
     @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+                // Inflate the cart_menu; this adds items to the action bar if it is present.
+                        MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.checkout_menu, menu);
+                return super.onCreateOptionsMenu(menu);
+            }
+
+             @Override
+     public boolean onOptionsItemSelected(MenuItem item) {
+                 // Handle action bar item clicks here. The action bar will
+                 // automatically handle clicks on the Home/Up button, so long
+                 // as you specify a parent activity in AndroidManifest.xml.
+                 int id = item.getItemId();
+
+                 //noinspection SimplifiableIfStatement
+                 if (id == R.id.checkOutButton) {
+                     Intent i = new Intent(Cart.this, Check_Out.class);
+                     startActivity(i);
+                     return true;
+                 }
+
+                 return super.onOptionsItemSelected(item);
+             }
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        listView1=(ListView)findViewById(R.id.cartButton);
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,contacts);
-        listView1.setAdapter(adapter);
-        // Register the ListView  for Context menu
-        registerForContextMenu(listView1);
+        setContentView(R.layout.cart);
+        list_view = (ListView) findViewById(R.id.list_view);
+        list.add("Covfefe");
+        list.add("Avocado");
+        list.add("Covfefe");
+        list.add("Avocado");
+        list.add("Covfefe");
+        list.add("Avocado");
+        adapter = new ArrayAdapter<String> (this, android.R.layout.simple_expandable_list_item_1, list);
+        list_view.setAdapter(adapter);
     }
+
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-    {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Select The Action");
-        menu.add(0, v.getId(), 0, "Remove");//groupId, itemId, order, title
-    }
-    @Override
-    public boolean onContextItemSelected(MenuItem item){
-        if(item.getTitle()=="Remove"){
-            //remove
-        }else{
-            return false;
-        }
-        return true;
-    }
+     public void onBackPressed()
+     {
+                super.onBackPressed();
+                startActivity(new Intent(Cart.this, MainActivity.class));
+                finish();
+            }
+
+
 }
