@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                             mBuilder.setView(mView);
                             /*TODO
                                 - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //DONE
-                                - IF BARCODE IS NOT VALID ERROR //A MUST
+                                - IF BARCODE IS NOT VALID ERROR //DONE
                                 - CANNOT ADD SAME SCANNED ITEM // A MUST */
                             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
                             Query query = mDatabase.child(scanned);
