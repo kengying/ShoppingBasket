@@ -97,8 +97,13 @@ public class Cart extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.delete_id:
                 list.remove(info.position);
+<<<<<<< HEAD
                 adapter.notifyDataSetChanged();
                 return true;
+=======
+            adapter.notifyDataSetChanged();
+            return true;
+>>>>>>> 6855bd28ca6511a06fc849845048757d513a12e4
 
         }
         return super.onContextItemSelected(item);
