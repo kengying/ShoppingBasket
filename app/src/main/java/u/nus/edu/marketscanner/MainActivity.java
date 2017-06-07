@@ -140,12 +140,13 @@ public class MainActivity extends AppCompatActivity {
                             final ImageView image = (ImageView) mView.findViewById(R.id.image);
                             final TextView mName = (TextView) mView.findViewById(R.id.text);
                             final TextView mPrice = (TextView) mView.findViewById(R.id.price);
-                            Button mAdd = (Button) mView.findViewById(R.id.btnAdd);
-                            Button mCancel = (Button) mView.findViewById(R.id.btnCancel);
-
+                            final Button mAdd = (Button) mView.findViewById(R.id.btnAdd);
+                            final Button mCancel = (Button) mView.findViewById(R.id.btnCancel);
+                            mAdd.setVisibility(View.GONE);
+                            mCancel.setVisibility(View.GONE);
                             mBuilder.setView(mView);
                             /*TODO
-                                - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //IF POSSIBLE
+                                - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //DONE
                                 - IF BARCODE IS NOT VALID ERROR //A MUST
                                 - CANNOT ADD SAME SCANNED ITEM // A MUST */
                             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
@@ -153,14 +154,23 @@ public class MainActivity extends AppCompatActivity {
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String imageScanned = dataSnapshot.child("item_Image").getValue(String.class);
-                                    String nameScanned = dataSnapshot.child("item_Name").getValue(String.class);
-                                    String priceScanned = "$" + dataSnapshot.child("item_Price").getValue(Double.class);
-                                    Picasso.with(getApplicationContext())
-                                            .load(imageScanned)
-                                            .into(image);
-                                    mName.setText(nameScanned);
-                                    mPrice.setText(priceScanned);
+                                    if(dataSnapshot.getValue() != null) {
+                                        String imageScanned = dataSnapshot.child("item_Image").getValue(String.class);
+                                        String nameScanned = dataSnapshot.child("item_Name").getValue(String.class);
+                                        String priceScanned = "$" + dataSnapshot.child("item_Price").getValue(Double.class);
+                                        Picasso.with(getApplicationContext())
+                                                .load(imageScanned)
+                                                .into(image);
+                                        mName.setText(nameScanned);
+                                        mPrice.setText(priceScanned);
+                                        mAdd.setVisibility(View.VISIBLE);
+                                    }
+                                    else{
+                                        mName.setText("ITEM IS NOT RECOGNISED!");
+                                    }
+                                    mCancel.setVisibility(View.VISIBLE);
+
+
                                     //Log.d("QUERY", dataSnapshot.child("item_Image").getValue(String.class));
                                 }
 
