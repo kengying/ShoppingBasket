@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="THANK YOU FOR SHOPPING AT DA!SO"
+        android:textColor="#ffaa80"
+        android:textSize="25sp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total amount:"
+        android:textColor="#000000"
+        android:textSize="20sp"/>
+
+    <ListView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Check out" />
+        android:divider="#00000000"
+        android:layout_weight="0.30"
+        android:listSelector="@android:color/transparent"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Press only when payment is done at counter!" />
+
 </LinearLayout>
