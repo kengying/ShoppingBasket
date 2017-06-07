@@ -86,7 +86,7 @@ public class Cart extends AppCompatActivity {
                 list.remove(info.position);
             adapter.notifyDataSetChanged();
             return true;
-            
+
         }
         return super.onContextItemSelected(item);
     }
