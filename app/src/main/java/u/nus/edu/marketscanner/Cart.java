@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,13 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +36,6 @@ public class Cart extends AppCompatActivity {
     ListView list_view;
     List<String> list = new ArrayList<String>();
     ArrayAdapter<String> adapter;
-
 
     private int no_of_item = 0;
     String cartID;
@@ -73,12 +80,46 @@ public class Cart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
         list_view = (ListView) findViewById(R.id.list_view);
-        list.add("Covfefe");
-        list.add("Avocado");
-        list.add("Covfefe");
-        list.add("Avocado");
-        list.add("Covfefe");
-        list.add("Avocado");
+
+        //to be confirmed
+
+        final ArrayList<String> itemName = new ArrayList<String>();
+        final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item");
+        for (int i = 1; i <= no_of_item; i++) {
+            Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
+            queryITEMID.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final String scanned = dataSnapshot.getValue(String.class);
+
+                    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
+                    Query query = mDatabase.child(scanned);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
+                            Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+                for(int i = 0; i < no_of_item; i++) {
+                    list.add(itemName.get(i));
+                }
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
         list_view.setAdapter(adapter);
         registerForContextMenu(list_view);
