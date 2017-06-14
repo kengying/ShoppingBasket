@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
                     stop = 1;
                     final String scanned = barcodes.valueAt(0).displayValue;
-                    Log.d("MainActivity", barcodes.valueAt(0).displayValue);
+                    Log.d("QUERY", barcodes.valueAt(0).displayValue);
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
 
@@ -152,9 +152,11 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.getValue() != null) {
-                                        String imageScanned = dataSnapshot.child("item_Image").getValue(String.class);
-                                        String nameScanned = dataSnapshot.child("item_Name").getValue(String.class);
-                                        String priceScanned = "$" + dataSnapshot.child("item_Price").getValue(Double.class);
+                                        Log.d("QUERY", dataSnapshot.getValue(Item.class) + "");
+                                        Item item = dataSnapshot.getValue(Item.class);
+                                        String imageScanned = item.getItem_Image();
+                                        String nameScanned = item.getItem_Name();
+                                        String priceScanned = "$" + item.getItem_Price();
                                         Picasso.with(getApplicationContext())
                                                 .load(imageScanned)
                                                 .into(image);
@@ -168,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                                     mCancel.setVisibility(View.VISIBLE);
 
 
-                                    //Log.d("QUERY", dataSnapshot.child("item_Image").getValue(String.class));
+                                    Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                 }
 
                                 @Override
