@@ -121,6 +121,9 @@ public class Cart extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
                             Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
+                            ArrayAdapter arrayAdapter = new ArrayAdapter(Cart.this, android.R.layout.simple_list_item_1,
+                                    itemName);
+                            list_view.setAdapter(arrayAdapter);
                         }
 
                         @Override
@@ -138,9 +141,9 @@ public class Cart extends AppCompatActivity {
 
         }
 
-                for(int i = 0; i < no_of_item; i++) {
-                    list.add(itemName.get(i));
-                }
+//                for(int i = 0; i < no_of_item; i++) {
+//                    list.add(itemName.get(i));
+//                }
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
         list_view.setAdapter(adapter);
