@@ -3,6 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/checkOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orderInCategory="0"
+        android:title="user"
+        android:visible="true"
+        app:actionLayout="@layout/creditcard_icon"
+        app:showAsAction="always" />
+
+    <item
+        android:title="cart"
+
         android:id="@+id/cartButton"
         android:icon="@drawable/cart"
         android:orderInCategory="0"

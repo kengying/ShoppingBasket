@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_gravity="center"
@@ -9,11 +9,10 @@
 
     <!-- Menu Item Image -->
     <ImageView
-        android:id="@+id/hotlist_bell"
+        android:id="@+id/cart_icon"
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:gravity="center"
-
         android:contentDescription="bell"
         android:src="@drawable/cart"
         android:layout_marginTop="10dp"
@@ -25,8 +24,8 @@
         android:id="@+id/no_of_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/hotlist_bell"
-        android:layout_alignEnd="@id/hotlist_bell"
+        android:layout_alignRight="@id/cart_icon"
+        android:layout_alignEnd="@id/cart_icon"
         android:text="@null"
         android:paddingBottom="1dp"
         android:paddingRight="4dp"

@@ -3,10 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/userButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orderInCategory="0"
+        android:title="user"
+        android:visible="true"
+        app:actionLayout="@layout/user_icon"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/checkOutButton"
         android:icon="@drawable/credit_card"
         android:title="Check out"
         app:showAsAction="always"
+        app:actionLayout="@layout/creditcard_icon"
         android:orderInCategory="0"/>
 
 </menu>

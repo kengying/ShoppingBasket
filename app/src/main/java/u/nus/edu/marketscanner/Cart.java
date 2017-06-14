@@ -1,6 +1,5 @@
 package u.nus.edu.marketscanner;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
@@ -43,31 +41,55 @@ public class Cart extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the cart_menu; this adds items to the action bar if it is present.
+        // Inflate the usercart_menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.checkout_menu, menu);
+        inflater.inflate(R.menu.usercheckout_menu, menu);
+        final MenuItem checkOutBtn = menu.findItem(R.id.checkOutButton);
+        final MenuItem userBtn = menu.findItem(R.id.userButton);
+        final View menu_User = userBtn.getActionView();
+        final View menu_CheckOut = checkOutBtn.getActionView();
+        menu_User.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Cart.this, Login.class);
+                i.putExtra("cartID", cartID);
+                i.putExtra("cartItemID", cartItemID);
+                i.putExtra("no_of_item", no_of_item);
+                startActivity(i);
+            }
+        });
+        menu_CheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Cart.this, Check_Out.class);
+                i.putExtra("cartID", cartID);
+                i.putExtra("cartItemID", cartItemID);
+                i.putExtra("no_of_item", no_of_item);
+                startActivity(i);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.checkOutButton) {
-            Intent i = new Intent(Cart.this, Check_Out.class);
-            i.putExtra("cartID", cartID);
-            i.putExtra("cartItemID", cartItemID);
-            i.putExtra("no_of_item", no_of_item);
-            startActivity(i);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.checkOutButton) {
+//            Intent i = new Intent(Cart.this, Check_Out.class);
+//            i.putExtra("cartID", cartID);
+//            i.putExtra("cartItemID", cartItemID);
+//            i.putExtra("no_of_item", no_of_item);
+//            startActivity(i);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

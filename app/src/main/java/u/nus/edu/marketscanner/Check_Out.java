@@ -7,10 +7,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -179,11 +176,13 @@ public class Check_Out extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.cart_menu, menu);
+        inflater.inflate(R.menu.usercart_menu, menu);
 
         final Menu m = menu;
         final MenuItem item = menu.findItem(R.id.cartButton);
+        final MenuItem userBtn = menu.findItem(R.id.userButton);
         final View menu_cart = item.getActionView();
+        final View menu_User = userBtn.getActionView();
         ui_no = (TextView) menu_cart.findViewById(R.id.no_of_item);
         updateItemCount(no_of_item);
         menu_cart.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +190,17 @@ public class Check_Out extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Check_Out.this, Cart.class);
+                i.putExtra("cartID", cartID);
+                i.putExtra("cartItemID", cartItemID);
+                i.putExtra("no_of_item", no_of_item);
+                startActivity(i);
+            }
+        });
+        menu_User.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Check_Out.this, Login.class);
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);

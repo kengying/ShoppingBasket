@@ -1,7 +1,6 @@
 package u.nus.edu.marketscanner;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -26,7 +25,6 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +34,6 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private int no_of_item = 0;
@@ -228,12 +225,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the cart_menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.cart_menu, menu);
+        // Inflate the usercart_menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.usercart_menu, menu);
 
         final Menu m = menu;
         final MenuItem item = menu.findItem(R.id.cartButton);
+        final MenuItem userBtn = menu.findItem(R.id.userButton);
         final View menu_cart = item.getActionView();
+        final View menu_User = userBtn.getActionView();
         ui_no = (TextView)  menu_cart.findViewById(R.id.no_of_item);
         updateItemCount(no_of_item);
         menu_cart.setOnClickListener(new View.OnClickListener() {
@@ -248,8 +247,51 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        menu_User.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                cameraSource.stop();
+                Intent i = new Intent(MainActivity.this, Login.class);
+                i.putExtra("cartID", cartID);
+                i.putExtra("cartItemID", cartItemID);
+                i.putExtra("no_of_item", no_of_item);
+                startActivity(i);
+            }
+        });
         return true;
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//        Log.d("CHANGE VIEW", id +"");
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.userButton) {
+//            cameraSource.stop();
+//            Intent i = new Intent(MainActivity.this, Login.class);
+//            i.putExtra("cartID", cartID);
+//            i.putExtra("cartItemID", cartItemID);
+//            i.putExtra("no_of_item", no_of_item);
+//            startActivity(i);
+//            // Do something
+//            return true;
+//        }
+//        if (id == R.id.cartButton) {
+//            cameraSource.stop();
+//            Intent i = new Intent(MainActivity.this, Cart.class);
+//            i.putExtra("cartID", cartID);
+//            i.putExtra("cartItemID", cartItemID);
+//            i.putExtra("no_of_item", no_of_item);
+//            startActivity(i);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public void updateItemCount(final int new_hot_number) {
         no_of_item = new_hot_number;
