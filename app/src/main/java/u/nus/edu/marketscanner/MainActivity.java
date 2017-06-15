@@ -145,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
                             /*TODO
                                 - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //DONE
                                 - IF BARCODE IS NOT VALID ERROR //DONE
-                                - CANNOT ADD SAME SCANNED ITEM // A MUST */
+                                - CANNOT ADD SAME SCANNED ITEM //DONE
+                                - IF ITEM STATUS IS FALSE CAN'T ADD*/
                             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
                             Query query = mDatabase.child(scanned);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -163,14 +164,15 @@ public class MainActivity extends AppCompatActivity {
                                         mName.setText(nameScanned);
                                         mPrice.setText(priceScanned);
                                         mAdd.setVisibility(View.VISIBLE);
+
+
+                                        Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                     }
                                     else{
                                         mName.setText("ITEM IS NOT RECOGNISED!");
                                     }
                                     mCancel.setVisibility(View.VISIBLE);
 
-
-                                    Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                 }
 
                                 @Override
@@ -196,19 +198,44 @@ public class MainActivity extends AppCompatActivity {
                                     if(cartID == null && cartItemID == null) {
                                         mCart = FirebaseDatabase.getInstance().getReference("carts").push();
                                         mCartItem = FirebaseDatabase.getInstance().getReference("cart_item").push();
-                                        mCartItem.child("item_ID").child("1").setValue(scanned);
+                                        mCartItem.child("item_ID").child(scanned).setValue("1");
                                         mCartItem.child("cart_ID").setValue(mCart.getKey());
                                         mCart.child("cart_Status").setValue("true");
                                         cartID = mCart.getKey();
                                         cartItemID = mCartItem.getKey();
                                         no_of_item = 1;
+
+                                        updateItemCount(no_of_item);
                                     }
                                     else{
-                                        no_of_item = no_of_item + 1;
                                         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("cart_item");
-                                        mDatabase.child(cartItemID).child("item_ID").child(no_of_item+"").setValue(scanned);
+                                        final DatabaseReference itemID =    mDatabase.child(cartItemID).child("item_ID").child(scanned);
+                                        itemID.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                String something = "0";
+                                                something = something+dataSnapshot.getValue(String.class);
+                                                if(something.contains("null")) {
+                                                    no_of_item = no_of_item + 1;
+                                                    Log.d("queryy", something);
+                                                    mDatabase.child(cartItemID).child("item_ID").child(scanned).setValue("1");
+                                                    updateItemCount(no_of_item);
+                                                }
+                                                else{
+                                                    Log.d("queryy", something);
+                                                    Toast.makeText(getApplicationContext(), "Sorry, item has already been added in", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
                                     }
-                                    updateItemCount(no_of_item);
                                     dialog.dismiss();
                                     stop = 0;
                                 }

@@ -50,33 +50,54 @@ public class Check_Out extends AppCompatActivity {
 
         }
         if (cartItemID != null) {
-            final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item");
+            final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
             Button mConfirm = (Button) findViewById(R.id.button2);
             mConfirm.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // Perform action on click
+
                     DatabaseReference mCart = FirebaseDatabase.getInstance().getReference("carts");
                     mCart.child(cartID).child("cart_Status").setValue("false");
 
-                    for (int i = 1; i <= no_of_item; i++) {
-                        Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
-                        queryITEMID.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                final String scanned = dataSnapshot.getValue(String.class);
+                    itemID.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Iterable<DataSnapshot> itemChildren = dataSnapshot.getChildren();
+                            for (DataSnapshot itemID : itemChildren) {
                                 final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
-                                mDatabase.child(scanned).child("item_Status").setValue("false");
+                                mDatabase.child(itemID.getKey()).child("item_Status").setValue("false");
                                 Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
                                 no_of_item = 0;
                                 updateItemCount(0);
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                        }
 
-                            }
-                        });
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+//                    for (int i = 1; i <= no_of_item; i++) {
+//                        Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
+//                        queryITEMID.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                final String scanned = dataSnapshot.getValue(String.class);
+//                                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
+//                                mDatabase.child(scanned).child("item_Status").setValue("false");
+//                                Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
+//                                no_of_item = 0;
+//                                updateItemCount(0);
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//                    }
 
                 }
             });
@@ -85,21 +106,19 @@ public class Check_Out extends AppCompatActivity {
             final ArrayList<Double> totalPrice = new ArrayList<Double>();
             adapter = new ArrayAdapter(this, R.layout.listview_checkout, totalPrice);
             total.setAdapter(adapter);
-            for (int i = 1; i <= no_of_item; i++) {
-                Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
-                queryITEMID.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final String scanned = dataSnapshot.getValue(String.class);
+            itemID.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
+                    Iterable<DataSnapshot> itemChildren = dataSnapshot.getChildren();
+                    for (DataSnapshot itemID : itemChildren) {
                         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
-                        Query query = mDatabase.child(scanned);
-                        query.addValueEventListener(new ValueEventListener() {
+                        Query query = mDatabase.child(itemID.getKey());
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 price.add(dataSnapshot.child("item_Price").getValue(Double.class));
                                 Log.d("Price", dataSnapshot.child("item_Price").getValue(Double.class).toString());
-
                                 if (price.size() == no_of_item) {
                                     Double compute = 0.0;
                                     for (Double elem : price) {
@@ -116,15 +135,55 @@ public class Check_Out extends AppCompatActivity {
 
                             }
                         });
-
                     }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                }
 
-                    }
-                });
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+//            for (int i = 1; i <= no_of_item; i++) {
+//                Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
+//                queryITEMID.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        final String scanned = dataSnapshot.getValue(String.class);
+//
+//                        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
+//                        Query query = mDatabase.child(scanned);
+//                        query.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                price.add(dataSnapshot.child("item_Price").getValue(Double.class));
+//                                Log.d("Price", dataSnapshot.child("item_Price").getValue(Double.class).toString());
+//
+//                                if (price.size() == no_of_item) {
+//                                    Double compute = 0.0;
+//                                    for (Double elem : price) {
+//                                        compute = elem + compute;
+//                                        Log.d("Price", elem + " TOTAL");
+//                                    }
+//                                    totalPrice.add(compute);
+//                                    adapter.notifyDataSetChanged();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
 
 
             //Log.d("Price",  " HELLO");
