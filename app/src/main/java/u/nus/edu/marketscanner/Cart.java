@@ -124,7 +124,10 @@ public class Cart extends AppCompatActivity {
                             Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                             ArrayAdapter arrayAdapter = new ArrayAdapter(Cart.this, android.R.layout.simple_list_item_1,
                                     itemName);
+                            list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
                             list_view.setAdapter(arrayAdapter);
+                            registerForContextMenu(list_view);
+
                         }
 
                         @Override
@@ -147,9 +150,9 @@ public class Cart extends AppCompatActivity {
 //                    list.add(itemName.get(i));
 //                }
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
-        list_view.setAdapter(adapter);
-        registerForContextMenu(list_view);
+//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
+//        list_view.setAdapter(adapter);
+//        registerForContextMenu(list_view);
     }
 
     @Override
@@ -161,11 +164,16 @@ public class Cart extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.delete_id:
+                Log.d("Cart: ", cartItemID);
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                Log.d("Cart: ",list.get(info.position));
+                final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
+                itemID.child(list.get(info.position)).removeValue();
                 list.remove(info.position);
-                adapter.notifyDataSetChanged();
+                no_of_item = no_of_item - 1;
+             //   adapter.notifyDataSetChanged();
                 return true;
 
         }
