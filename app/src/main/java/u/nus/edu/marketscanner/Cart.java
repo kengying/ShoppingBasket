@@ -33,13 +33,13 @@ public class Cart extends AppCompatActivity {
 
     ListView list_view;
     List<String> list = new ArrayList<String>();
-    ArrayAdapter<String> adapter;
-    String cartItemID;
-    DatabaseReference itemID;
     ArrayAdapter arrayAdapter;
+
 
     private int no_of_item = 0;
     String cartID;
+    String cartItemID;
+    DatabaseReference itemID;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
