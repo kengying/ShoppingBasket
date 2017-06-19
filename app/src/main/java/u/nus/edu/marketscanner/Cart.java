@@ -34,10 +34,12 @@ public class Cart extends AppCompatActivity {
     ListView list_view;
     List<String> list = new ArrayList<String>();
     ArrayAdapter<String> adapter;
+    String cartItemID;
+    DatabaseReference itemID;
+    ArrayAdapter arrayAdapter;
 
     private int no_of_item = 0;
     String cartID;
-    String cartItemID;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,7 +108,7 @@ public class Cart extends AppCompatActivity {
         //to be confirmed
 
         final ArrayList<String> itemName = new ArrayList<String>();
-        final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
+        itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
         itemID.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -122,9 +124,11 @@ public class Cart extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
                             Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
-                            ArrayAdapter arrayAdapter = new ArrayAdapter(Cart.this, android.R.layout.simple_list_item_1,
+                            arrayAdapter = new ArrayAdapter(Cart.this, android.R.layout.simple_list_item_1,
                                     itemName);
+                            list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
                             list_view.setAdapter(arrayAdapter);
+                            registerForContextMenu(list_view);
                         }
 
                         @Override
@@ -147,9 +151,6 @@ public class Cart extends AppCompatActivity {
 //                    list.add(itemName.get(i));
 //                }
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
-        list_view.setAdapter(adapter);
-        registerForContextMenu(list_view);
     }
 
     @Override
@@ -164,8 +165,11 @@ public class Cart extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.delete_id:
+                itemID.child(list.get(info.position)).removeValue();
                 list.remove(info.position);
-                adapter.notifyDataSetChanged();
+                no_of_item = no_of_item - 1;
+
+                arrayAdapter.notifyDataSetChanged();
                 return true;
 
         }
