@@ -169,11 +169,11 @@ public class Cart extends AppCompatActivity {
                 list.remove(info.position);
                 no_of_item = no_of_item - 1;
 
-                arrayAdapter.notifyDataSetChanged();
+                arrayAdapter.remove(list.get(info.position));
                 return true;
-
+            default:
+                return super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
     }
 
     @Override
