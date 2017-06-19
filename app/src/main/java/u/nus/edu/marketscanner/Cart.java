@@ -169,7 +169,8 @@ public class Cart extends AppCompatActivity {
                 list.remove(info.position);
                 no_of_item = no_of_item - 1;
 
-                arrayAdapter.remove(list.get(info.position));
+                arrayAdapter.remove(arrayAdapter.getItem(info.position));
+                arrayAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onContextItemSelected(item);
