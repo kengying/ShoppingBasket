@@ -165,6 +165,9 @@ public class Cart extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.delete_id:
+                Log.d("Cart: ", cartItemID);
+                Log.d("Cart: ",list.get(info.position));
+
                 itemID.child(list.get(info.position)).removeValue();
                 list.remove(info.position);
                 no_of_item = no_of_item - 1;
