@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -128,14 +129,14 @@ public class Cart extends AppCompatActivity {
 
                             Map<String, String> data = new HashMap<String, String>(2);
                             data.put("name", dataSnapshot.child("item_Name").getValue(String.class));
-                            data.put("price", String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                            data.put("price", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
                             itemName.add(data);
 
                            // itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
                            // itemName.add(String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
 
                             Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
-                            Log.d("QUERY", String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                            Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
                             adapter = new SimpleAdapter(Cart.this, itemName, android.R.layout.simple_list_item_2,
                                     new String[] {"name", "price"}, new int[] {android.R.id.text1, android.R.id.text2});
                             list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
