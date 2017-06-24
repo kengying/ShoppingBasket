@@ -1,6 +1,7 @@
 package u.nus.edu.marketscanner;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             mAdd.setVisibility(View.GONE);
                             mCancel.setVisibility(View.GONE);
                             mBuilder.setView(mView);
+
                             /*TODO
                                 - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //DONE
                                 - IF BARCODE IS NOT VALID ERROR //DONE
@@ -188,6 +190,12 @@ public class MainActivity extends AppCompatActivity {
 
                             final AlertDialog dialog = mBuilder.create();
                             dialog.show();
+                            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    stop = 0;
+                                }
+                            });
                             mCancel.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
