@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +24,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -33,13 +37,14 @@ public class Cart extends AppCompatActivity {
 
     ListView list_view;
     List<String> list = new ArrayList<String>();
-    ArrayAdapter arrayAdapter;
+    List<Map<String, String>> itemName;
 
 
     private int no_of_item = 0;
     String cartID = "helloiamtesting";
     String cartItemID = "dontdeletethis";
     DatabaseReference itemID;
+    SimpleAdapter adapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,9 +110,14 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.cart);
         list_view = (ListView) findViewById(R.id.list_view);
 
+<<<<<<< HEAD
         //to be confirmed
         Log.d("TEST", cartID + " " + cartItemID);
         final ArrayList<String> itemName = new ArrayList<String>();
+=======
+        itemName = new ArrayList<Map<String, String>>();
+
+>>>>>>> 89a6753dd0db587cb3e08aa90f3216a9f44e41d5
         itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
         itemID.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -122,12 +132,21 @@ public class Cart extends AppCompatActivity {
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
+
+                            Map<String, String> data = new HashMap<String, String>(2);
+                            data.put("name", dataSnapshot.child("item_Name").getValue(String.class));
+                            data.put("price", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                            itemName.add(data);
+
+                           // itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
+                           // itemName.add(String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+
                             Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
-                            arrayAdapter = new ArrayAdapter(Cart.this, android.R.layout.simple_list_item_1,
-                                    itemName);
+                            Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                            adapter = new SimpleAdapter(Cart.this, itemName, android.R.layout.simple_list_item_2,
+                                    new String[] {"name", "price"}, new int[] {android.R.id.text1, android.R.id.text2});
                             list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
-                            list_view.setAdapter(arrayAdapter);
+                            list_view.setAdapter(adapter);
                             registerForContextMenu(list_view);
                         }
 
@@ -172,8 +191,8 @@ public class Cart extends AppCompatActivity {
                 list.remove(info.position);
                 no_of_item = no_of_item - 1;
 
-                arrayAdapter.remove(arrayAdapter.getItem(info.position));
-                arrayAdapter.notifyDataSetChanged();
+                itemName.remove(adapter.getItem(info.position));
+                adapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onContextItemSelected(item);
