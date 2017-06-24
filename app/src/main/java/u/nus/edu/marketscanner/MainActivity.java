@@ -158,13 +158,18 @@ public class MainActivity extends AppCompatActivity {
                                         String imageScanned = item.getItem_Image();
                                         String nameScanned = item.getItem_Name();
                                         String priceScanned = "$" + item.getItem_Price();
+                                        String itemStatus = item.getItem_Status();
                                         Picasso.with(getApplicationContext())
                                                 .load(imageScanned)
                                                 .into(image);
                                         mName.setText(nameScanned);
                                         mPrice.setText(priceScanned);
-                                        mAdd.setVisibility(View.VISIBLE);
-
+                                        if(itemStatus.equals("true"))
+                                            mAdd.setVisibility(View.VISIBLE);
+                                        else{
+                                            mName.setText("ITEM HAVE BEEN SOLD");
+                                            mPrice.setText("");
+                                        }
 
                                         Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                     }
