@@ -39,8 +39,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
     private int no_of_item = 0;
     private TextView ui_no = null;
-    public static  int REQUEST_CODE = 100;
-    public static  int PERMISSION_REQUEST = 200;
+    public static int REQUEST_CODE = 100;
+    public static int PERMISSION_REQUEST = 200;
     String cartID = null;
     String cartItemID = null;
 
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     BarcodeDetector barcode;
     CameraSource cameraSource;
     SurfaceHolder holder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

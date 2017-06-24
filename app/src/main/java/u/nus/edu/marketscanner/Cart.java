@@ -14,8 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.google.android.gms.vision.CameraSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -114,52 +117,59 @@ public class Cart extends AppCompatActivity {
         Log.d("TEST", cartID + " " + cartItemID);
        // final ArrayList<String> itemName = new ArrayList<String>();
         itemName = new ArrayList<Map<String, String>>();
-        itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
+
+        if(cartItemID == null && cartID == null) {
+
+            Toast.makeText(getApplicationContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
+
+        } else {
+            itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
         itemID.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d("SOMETHIING ", dataSnapshot.getChildrenCount() + "");
-                Iterable<DataSnapshot> itemChildren = dataSnapshot.getChildren();
-                for (DataSnapshot itemID : itemChildren) {
-                    Log.d("SOMETHIING ", itemID.getKey());
-                    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
-                    Query query = mDatabase.child(itemID.getKey());
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d("SOMETHIING ", dataSnapshot.getChildrenCount() + "");
+                    Iterable<DataSnapshot> itemChildren = dataSnapshot.getChildren();
+                    for (DataSnapshot itemID : itemChildren) {
+                        Log.d("SOMETHIING ", itemID.getKey());
+                        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
+                        Query query = mDatabase.child(itemID.getKey());
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            Map<String, String> data = new HashMap<String, String>(2);
-                            data.put("name", dataSnapshot.child("item_Name").getValue(String.class));
-                            data.put("price", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
-                            itemName.add(data);
+                                Map<String, String> data = new HashMap<String, String>(2);
+                                data.put("name", dataSnapshot.child("item_Name").getValue(String.class));
+                                data.put("price", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                                itemName.add(data);
 
-                           // itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
-                           // itemName.add(String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                                // itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
+                                // itemName.add(String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
 
-                            Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
-                            Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
-                            adapter = new SimpleAdapter(Cart.this, itemName, android.R.layout.simple_list_item_2,
-                                    new String[] {"name", "price"}, new int[] {android.R.id.text1, android.R.id.text2});
-                            list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
-                            list_view.setAdapter(adapter);
-                            registerForContextMenu(list_view);
-                        }
+                                Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
+                                Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                                adapter = new SimpleAdapter(Cart.this, itemName, android.R.layout.simple_list_item_2,
+                                        new String[]{"name", "price"}, new int[]{android.R.id.text1, android.R.id.text2});
+                                list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
+                                list_view.setAdapter(adapter);
+                                registerForContextMenu(list_view);
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        }
 
 
 //                for(int i = 0; i < no_of_item; i++) {
