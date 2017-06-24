@@ -38,6 +38,10 @@ public class Check_Out extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        final ArrayList<Double> price = new ArrayList<Double>();
+        final ArrayList<String> totalPrice = new ArrayList<String>();
+        adapter = new ArrayAdapter(this, R.layout.listview_checkout, totalPrice);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_out);
         total = (ListView) findViewById(R.id.textView2);
@@ -70,9 +74,20 @@ public class Check_Out extends AppCompatActivity {
                                 Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
                                 no_of_item = 0;
                                 updateItemCount(0);
+                                cartItemID = "";
+                                cartID ="";
+
                             }
 
+                            total.setAdapter(null);
+                            totalPrice.clear();
+                            totalPrice.add("$0.0");
+                            total.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+
+
                         }
+
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -102,9 +117,6 @@ public class Check_Out extends AppCompatActivity {
                 }
             });
 
-            final ArrayList<Double> price = new ArrayList<Double>();
-            final ArrayList<Double> totalPrice = new ArrayList<Double>();
-            adapter = new ArrayAdapter(this, R.layout.listview_checkout, totalPrice);
             total.setAdapter(adapter);
             itemID.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -125,7 +137,7 @@ public class Check_Out extends AppCompatActivity {
                                         compute = elem + compute;
                                         Log.d("Price", elem + " TOTAL");
                                     }
-                                    totalPrice.add(compute);
+                                    totalPrice.add("$" + compute.toString());
                                     adapter.notifyDataSetChanged();
                                 }
                             }

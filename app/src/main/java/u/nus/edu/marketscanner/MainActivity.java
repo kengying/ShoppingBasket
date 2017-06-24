@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                         if(itemStatus.equals("true"))
                                             mAdd.setVisibility(View.VISIBLE);
                                         else{
-                                            mName.setText("ITEM HAVE BEEN SOLD");
+                                            mName.setText("ITEM HAS BEEN SOLD");
                                             mPrice.setText("");
                                         }
 
@@ -211,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
                                         no_of_item = 1;
 
                                         updateItemCount(no_of_item);
+
+                                        Toast.makeText(getApplicationContext(), "Item has been added successfully.", Toast.LENGTH_SHORT).show();
                                     }
                                     else{
                                         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("cart_item");
@@ -225,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.d("queryy", something);
                                                     mDatabase.child(cartItemID).child("item_ID").child(scanned).setValue("1");
                                                     updateItemCount(no_of_item);
+                                                    Toast.makeText(getApplicationContext(), "Item has been added successfully.", Toast.LENGTH_SHORT).show();
                                                 }
                                                 else{
                                                     Log.d("queryy", something);
