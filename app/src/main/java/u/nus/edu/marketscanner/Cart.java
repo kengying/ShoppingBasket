@@ -41,8 +41,8 @@ public class Cart extends AppCompatActivity {
 
 
     private int no_of_item = 0;
-    String cartID = "helloiamtesting";
-    String cartItemID = "dontdeletethis";
+    String cartID = "";
+    String cartItemID = "";
     DatabaseReference itemID;
     SimpleAdapter adapter;
 
@@ -102,22 +102,18 @@ public class Cart extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            cartID = "helloiamtesting";
-             cartItemID = "dontdeletethis";
+            cartID = extras.getString("cartID");
+            cartItemID = extras.getString("cartItemID");
             no_of_item = extras.getInt("no_of_item");
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
         list_view = (ListView) findViewById(R.id.list_view);
 
-<<<<<<< HEAD
         //to be confirmed
         Log.d("TEST", cartID + " " + cartItemID);
-        final ArrayList<String> itemName = new ArrayList<String>();
-=======
+       // final ArrayList<String> itemName = new ArrayList<String>();
         itemName = new ArrayList<Map<String, String>>();
-
->>>>>>> 89a6753dd0db587cb3e08aa90f3216a9f44e41d5
         itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
         itemID.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
