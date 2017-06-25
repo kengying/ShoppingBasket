@@ -74,11 +74,11 @@ public class Check_Out extends AppCompatActivity {
                                 Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
                                 no_of_item = 0;
                                 updateItemCount(0);
-                                cartItemID = "";
-                                cartID ="";
+
 
                             }
-
+                            cartItemID = "";
+                            cartID ="";
                             total.setAdapter(null);
                             totalPrice.clear();
                             totalPrice.add("$0.0");
