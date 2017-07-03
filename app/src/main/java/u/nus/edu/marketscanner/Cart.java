@@ -47,7 +47,7 @@ public class Cart extends AppCompatActivity {
     String cartID = "";
     String cartItemID = "";
     DatabaseReference itemID;
-    SimpleAdapter adapter;
+    ItemAdapter adapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,9 +111,8 @@ public class Cart extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
-        list_view = (ListView) findViewById(R.id.list_view);
+        list_view = (ListView) findViewById(R.id.main_list_view);
 
-        //to be confirmed
         Log.d("TEST", cartID + " " + cartItemID);
        // final ArrayList<String> itemName = new ArrayList<String>();
         itemName = new ArrayList<Map<String, String>>();
@@ -148,8 +147,7 @@ public class Cart extends AppCompatActivity {
 
                                 Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                 Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
-                                adapter = new SimpleAdapter(Cart.this, itemName, android.R.layout.simple_list_item_2,
-                                        new String[]{"name", "price"}, new int[]{android.R.id.text1, android.R.id.text2});
+                                adapter = new ItemAdapter(getApplicationContext(),R.layout.row_layout);
                                 list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
                                 list_view.setAdapter(adapter);
                                 registerForContextMenu(list_view);

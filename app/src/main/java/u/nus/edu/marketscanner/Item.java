@@ -34,6 +34,10 @@ public class Item {
         return item_Price;
     }
 
+    public String getItem_Price_String() {
+        return String.valueOf(item_Price);
+    }
+
     public void setItem_Price(Double item_Price) {
         this.item_Price = item_Price;
     }
@@ -56,6 +60,10 @@ public class Item {
 
     public String getItem_Image() {
         return item_Image;
+    }
+
+    public int getItem_Image_int() {
+        return Integer.parseInt(item_Image);
     }
 
     public void setItem_Image(String item_Image) {
