@@ -5,6 +5,7 @@
     android:layout_marginTop="0dp"
     android:layout_marginBottom="0dp"
     android:focusableInTouchMode="true"
+    android:longClickable="true"
     >
 
     <ImageView
@@ -17,23 +18,26 @@
         android:paddingLeft="10dp"
         android:scaleType="centerCrop"
         />
+
     <TextView
         android:id="@+id/item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/item_img"
-        android:layout_centerVertical="true"
         android:paddingTop="10dp"
-        />
+        android:textColor="#000000" />
+
     <TextView
         android:id="@+id/item_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:paddingTop="10dp"
+        android:layout_below="@+id/item_name"
+        android:layout_toRightOf="@+id/item_img"
+
         android:paddingRight="10dp"
-        />
+        android:paddingTop="10dp"
+        android:textColor="#000000" />
 
 
 </RelativeLayout>

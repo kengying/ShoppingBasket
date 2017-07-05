@@ -3,11 +3,21 @@ package u.nus.edu.marketscanner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by PANDA on 12/6/2017.
@@ -19,19 +29,82 @@ public class Login extends AppCompatActivity {
     private Button loginBtn = null;
     private TextView ui_no = null;
     private int no_of_item = 0;
-    String cartID;
-    String cartItemID;
+    private EditText mUsername = null;
+    private EditText mPassword = null;
+
+    private String username = null;
+    private String password = null;
+    private String cartID;
+    private String cartItemID;
 
 
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.user);
+        Intent intent = getIntent();
+        User user = intent.getParcelableExtra("user");
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             cartID = extras.getString("cartID");
             cartItemID = extras.getString("cartItemID");
             no_of_item = extras.getInt("no_of_item");
+            Log.d("TEST login", cartID + " " + cartItemID);
         }
+
+        if(user != null){
+            Intent i = new Intent(Login.this, Profile.class);
+            i.putExtra("cartID", cartID);
+            i.putExtra("cartItemID", cartItemID);
+            i.putExtra("no_of_item", no_of_item);
+            i.putExtra("user", user);
+            Log.d("TEST login", cartID + " " + cartItemID);
+            startActivity(i);
+        } else{
+        setContentView(R.layout.login);
+
         signUpBtn = (Button)findViewById(R.id.signupBtn);
+        loginBtn = (Button)findViewById(R.id.loginBtn);
+
+        loginBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                mUsername = (EditText)findViewById(R.id.usernameET);
+                username = mUsername.getText().toString();
+                mPassword = (EditText)findViewById(R.id.passwordET);
+                password = mPassword.getText().toString();
+
+                Query query = FirebaseDatabase.getInstance().getReference("users").child(username);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getValue() != null) {
+                            User user = dataSnapshot.getValue(User.class);
+                            Log.d("QUERY for user", user.toString());
+                            if(username.equals(user.getUsername()) && password.equals(user.getPassword())){
+                                Intent i = new Intent(Login.this, Profile.class);
+                                i.putExtra("cartID", cartID);
+                                i.putExtra("cartItemID", cartItemID);
+                                i.putExtra("no_of_item", no_of_item);
+                                i.putExtra("user", user);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Password is wrong", Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Username is not in database.", Toast.LENGTH_LONG).show();
+                        }
+
+                        mUsername.setText("");
+                        mPassword.setText("");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(Login.this, Sign_Up.class);
@@ -41,6 +114,7 @@ public class Login extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -82,6 +156,7 @@ public class Login extends AppCompatActivity {
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                Log.d("TEST login", cartID + " " + cartItemID);
                 startActivity(i);
             }
         });
@@ -93,6 +168,7 @@ public class Login extends AppCompatActivity {
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                Log.d("TEST login", cartID + " " + cartItemID);
                 startActivity(i);
             }
         });

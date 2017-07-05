@@ -17,8 +17,7 @@
         android:src="@drawable/img_crystal"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="12dp"
-        android:visibility="invisible"/>
+        android:layout_marginRight="12dp"/>
 
 
 </RelativeLayout>

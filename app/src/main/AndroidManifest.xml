@@ -26,6 +26,7 @@
         <activity android:name="u.nus.edu.marketscanner.Check_Out"></activity>
         <activity android:name="u.nus.edu.marketscanner.Login"></activity>
         <activity android:name="u.nus.edu.marketscanner.Sign_Up"></activity>
+        <activity android:name="u.nus.edu.marketscanner.Profile"></activity>
     </application>
 
 </manifest>

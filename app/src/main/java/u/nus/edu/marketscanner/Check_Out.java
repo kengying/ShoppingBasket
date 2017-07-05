@@ -21,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by PANDA on 31/5/2017.
@@ -34,11 +36,13 @@ public class Check_Out extends AppCompatActivity {
     String cartID;
     String cartItemID;
     ArrayAdapter adapter;
+    private User user = new User();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("user");
         final ArrayList<Double> price = new ArrayList<Double>();
         final ArrayList<String> totalPrice = new ArrayList<String>();
         adapter = new ArrayAdapter(this, R.layout.listview_checkout, totalPrice);
@@ -54,70 +58,9 @@ public class Check_Out extends AppCompatActivity {
 
         }
         if (cartItemID != null) {
+
             final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
-            Button mConfirm = (Button) findViewById(R.id.button2);
-            mConfirm.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // Perform action on click
 
-                    DatabaseReference mCart = FirebaseDatabase.getInstance().getReference("carts");
-                    mCart.child(cartID).child("cart_Status").setValue("false");
-
-                    itemID.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            Iterable<DataSnapshot> itemChildren = dataSnapshot.getChildren();
-                            for (DataSnapshot itemID : itemChildren) {
-                                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
-                                mDatabase.child(itemID.getKey()).child("item_Status").setValue("false");
-                                Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
-                                no_of_item = 0;
-                                updateItemCount(0);
-
-
-                            }
-                            cartItemID = "";
-                            cartID ="";
-                            total.setAdapter(null);
-                            totalPrice.clear();
-                            totalPrice.add("$0.0");
-                            total.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-
-
-                        }
-
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-//                    for (int i = 1; i <= no_of_item; i++) {
-//                        Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
-//                        queryITEMID.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                final String scanned = dataSnapshot.getValue(String.class);
-//                                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
-//                                mDatabase.child(scanned).child("item_Status").setValue("false");
-//                                Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
-//                                no_of_item = 0;
-//                                updateItemCount(0);
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    }
-
-                }
-            });
-
-            total.setAdapter(adapter);
             itemID.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -137,6 +80,7 @@ public class Check_Out extends AppCompatActivity {
                                         compute = elem + compute;
                                         Log.d("Price", elem + " TOTAL");
                                     }
+                                    totalPrice.clear();
                                     totalPrice.add("$" + compute.toString());
                                     adapter.notifyDataSetChanged();
                                 }
@@ -156,6 +100,65 @@ public class Check_Out extends AppCompatActivity {
 
                 }
             });
+
+            Button mConfirm = (Button) findViewById(R.id.button2);
+            mConfirm.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // Perform action on click
+                    String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
+
+                    final DatabaseReference mCart_users = FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername());
+                    mCart_users.child(cartItemID).child("size").setValue(no_of_item);
+                    mCart_users.child(cartItemID).child("amount").setValue(totalPrice.get(0));
+                    mCart_users.child(cartItemID).child("dateTime").setValue(currentDateTime);
+
+                    user.setNo_of_carts(user.getNo_of_carts() + 1);
+                    FirebaseDatabase.getInstance().getReference("users").child(user.getUsername()).child("no_of_carts").setValue(user.getNo_of_carts());
+
+
+//                    FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername()).child(user.getNo_of_carts()+1+"").child(cartID).child("size").setValue(no_of_item);
+//                    FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername()).child(user.getNo_of_carts()+1+"").child(cartID).child("amount").setValue(totalPrice.get(0));
+
+
+                    DatabaseReference mCart = FirebaseDatabase.getInstance().getReference("carts");
+                    mCart.child(cartID).child("cart_Status").setValue("false");
+
+                    itemID.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Iterable<DataSnapshot> itemChildren = dataSnapshot.getChildren();
+                            for (DataSnapshot itemID : itemChildren) {
+                                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
+                                mDatabase.child(itemID.getKey()).child("item_Status").setValue("false");
+                                Toast.makeText(getBaseContext(), "thank you!", Toast.LENGTH_SHORT).show();
+                                no_of_item = 0;
+                                updateItemCount(0);
+
+
+                            }
+                            cartItemID = null;
+                            cartID = null;
+                            total.setAdapter(null);
+                            totalPrice.clear();
+                            totalPrice.add("$0.0");
+                            total.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+
+
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            });
+
+            total.setAdapter(adapter);
+
 //            for (int i = 1; i <= no_of_item; i++) {
 //                Query queryITEMID = itemID.child(cartItemID).child("item_ID").child(i + "");
 //                queryITEMID.addValueEventListener(new ValueEventListener() {
@@ -202,6 +205,7 @@ public class Check_Out extends AppCompatActivity {
             //Log.d("Price", "WHY " + getPrice(no_of_item, cartItemID));
         }
     }
+
     public Double getPrice(int no_of_item, String cartItemID) {
         final ArrayList<Double> price = new ArrayList<Double>();
         final DatabaseReference itemID = FirebaseDatabase.getInstance().getReference("cart_item");
@@ -264,6 +268,8 @@ public class Check_Out extends AppCompatActivity {
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                if (user != null)
+                    i.putExtra("user", user);
                 startActivity(i);
             }
         });
@@ -275,6 +281,8 @@ public class Check_Out extends AppCompatActivity {
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                if (user != null)
+                    i.putExtra("user", user);
                 startActivity(i);
             }
         });
@@ -305,6 +313,8 @@ public class Check_Out extends AppCompatActivity {
         i.putExtra("cartID", cartID);
         i.putExtra("cartItemID", cartItemID);
         i.putExtra("no_of_item", no_of_item);
+        if (user != null)
+            i.putExtra("user", user);
         startActivity(i);
         finish();
     }

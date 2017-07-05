@@ -62,8 +62,8 @@ public class Item {
         return item_Image;
     }
 
-    public int getItem_Image_int() {
-        return Integer.parseInt(item_Image);
+    public String getItem_Image_int() {
+        return item_Image;
     }
 
     public void setItem_Image(String item_Image) {

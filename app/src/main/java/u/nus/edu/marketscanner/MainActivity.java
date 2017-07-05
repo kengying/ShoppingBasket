@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     String cartID = null;
     String cartItemID = null;
 
+    private User user = new User();
     SurfaceView cameraView;
     BarcodeDetector barcode;
     CameraSource cameraSource;
@@ -52,12 +53,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("user");
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
             cartID = extras.getString("cartID");
             cartItemID = extras.getString("cartItemID");
             no_of_item = extras.getInt("no_of_item");
         }
+
+        Log.d("Check user", user + "");
         Log.d("BACKBACK", cartID + " " +cartItemID);
         //stops the app if the barcode reading function does not work
         //why did you place this here? it's already at line 60. if you put this here, the app will be crashing
@@ -149,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
                                 - SHOW ADD AND CANCEL BTN AFTER DETAILS IS THERE //DONE
                                 - IF BARCODE IS NOT VALID ERROR //DONE
                                 - CANNOT ADD SAME SCANNED ITEM //DONE
-                                - IF ITEM STATUS IS FALSE CAN'T ADD*/
+                                - IF ITEM STATUS IS FALSE CAN'T ADD //DONE
+                                - AFTER CHECKOUT NEW CART*/
                             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("items");
                             Query query = mDatabase.child(scanned);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -290,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                if(user != null)
+                    i.putExtra("user", user);
                 startActivity(i);
             }
         });
@@ -302,6 +310,8 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                if(user != null)
+                    i.putExtra("user", user);
                 startActivity(i);
             }
         });

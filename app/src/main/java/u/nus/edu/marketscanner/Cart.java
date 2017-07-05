@@ -41,13 +41,16 @@ public class Cart extends AppCompatActivity {
     ListView list_view;
     List<String> list = new ArrayList<String>();
     List<Map<String, String>> itemName;
-
+    List<Item> rowItems = new ArrayList<Item>();
 
     private int no_of_item = 0;
     String cartID = "";
     String cartItemID = "";
     DatabaseReference itemID;
     ItemAdapter adapter;
+    private User user = new User();
+    private String tmpHistory = "";
+    private String tmpCartItemID = "";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,20 +64,34 @@ public class Cart extends AppCompatActivity {
         menu_User.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (tmpHistory != null && tmpHistory != "") {
+                    cartItemID = tmpCartItemID;
+                    tmpCartItemID = null;
+                }
+                Log.d("TEST cart", cartID + " " + cartItemID);
                 Intent i = new Intent(Cart.this, Login.class);
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                if (user != null)
+                    i.putExtra("user", user);
                 startActivity(i);
             }
         });
         menu_CheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (tmpHistory != null && tmpHistory != "") {
+                    cartItemID = tmpCartItemID;
+                    tmpCartItemID = null;
+                }
+                Log.d("TEST cart", cartID + " " + cartItemID);
                 Intent i = new Intent(Cart.this, Check_Out.class);
                 i.putExtra("cartID", cartID);
                 i.putExtra("cartItemID", cartItemID);
                 i.putExtra("no_of_item", no_of_item);
+                if (user != null)
+                    i.putExtra("user", user);
                 startActivity(i);
             }
         });
@@ -103,27 +120,38 @@ public class Cart extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("user");
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             cartID = extras.getString("cartID");
             cartItemID = extras.getString("cartItemID");
             no_of_item = extras.getInt("no_of_item");
+            tmpHistory = extras.getString("tmpHistory");
+
+
+        }
+
+        if (tmpHistory != null && tmpHistory != "" ) {
+            tmpCartItemID = cartItemID;
+            cartItemID = tmpHistory;
+
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
         list_view = (ListView) findViewById(R.id.main_list_view);
 
-        Log.d("TEST", cartID + " " + cartItemID);
-       // final ArrayList<String> itemName = new ArrayList<String>();
+        Log.d("TEST cart", cartID + " " + cartItemID + " " + tmpHistory);
+        // final ArrayList<String> itemName = new ArrayList<String>();
         itemName = new ArrayList<Map<String, String>>();
 
-        if(cartItemID == null && cartID == null) {
+        if (cartItemID == null) {
 
             Toast.makeText(getApplicationContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
 
         } else {
             itemID = FirebaseDatabase.getInstance().getReference("cart_item").child(cartItemID).child("item_ID");
-        itemID.addListenerForSingleValueEvent(new ValueEventListener() {
+            itemID.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -137,19 +165,25 @@ public class Cart extends AppCompatActivity {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                Map<String, String> data = new HashMap<String, String>(2);
+                                Map<String, String> data = new HashMap<String, String>(3);
                                 data.put("name", dataSnapshot.child("item_Name").getValue(String.class));
                                 data.put("price", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
+                                data.put("image", String.valueOf(dataSnapshot.child("item_Image").getValue(String.class)));
                                 itemName.add(data);
 
+                                Item cartItem = dataSnapshot.getValue(Item.class);
+                                Log.d("QUERY", cartItem.toString());
+                                rowItems.add(cartItem);
                                 // itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
                                 // itemName.add(String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
 
                                 Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                 Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
-                                adapter = new ItemAdapter(getApplicationContext(),R.layout.row_layout);
+                                adapter = new ItemAdapter(getApplicationContext(), R.layout.row_layout, rowItems);
+                                // adapter = new ItemAdapter(getApplicationContext(),R.layout.row_layout);
                                 list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
                                 list_view.setAdapter(adapter);
+                                if(tmpHistory == null)
                                 registerForContextMenu(list_view);
                             }
 
@@ -160,6 +194,7 @@ public class Cart extends AppCompatActivity {
                         });
                     }
 
+
                 }
 
                 @Override
@@ -169,10 +204,6 @@ public class Cart extends AppCompatActivity {
             });
         }
 
-
-//                for(int i = 0; i < no_of_item; i++) {
-//                    list.add(itemName.get(i));
-//                }
 
     }
 
@@ -189,13 +220,14 @@ public class Cart extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.delete_id:
                 Log.d("Cart: ", cartItemID);
-                Log.d("Cart: ",list.get(info.position));
+                Log.d("Cart: ", info.position + "");
 
                 itemID.child(list.get(info.position)).removeValue();
                 list.remove(info.position);
                 no_of_item = no_of_item - 1;
-
-                itemName.remove(adapter.getItem(info.position));
+                adapter.remove(rowItems, info.position);
+//                rowItems.remove(info.position);
+//                itemName.remove(adapter.getItem(info.position));
                 adapter.notifyDataSetChanged();
                 return true;
             default:
@@ -206,10 +238,17 @@ public class Cart extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Log.d("TEST cart", cartID + " " + cartItemID);
+        if (tmpHistory != null && tmpHistory != "") {
+            cartItemID = tmpCartItemID;
+            tmpCartItemID = null;
+        }
         Intent i = new Intent(Cart.this, MainActivity.class);
         i.putExtra("cartID", cartID);
         i.putExtra("cartItemID", cartItemID);
         i.putExtra("no_of_item", no_of_item);
+        if (user != null)
+            i.putExtra("user", user);
         startActivity(i);
         finish();
     }
