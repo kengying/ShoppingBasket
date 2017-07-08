@@ -23,6 +23,10 @@ public class User implements Parcelable {
         this.no_of_carts = null;
     }
 
+  //  public User() {
+        //required empty constructor for Firebase
+  //  }
+
     public User(String username, String password, String lastName, String firstName, Long no_of_carts){
         this.username = username;
         this.password = password;

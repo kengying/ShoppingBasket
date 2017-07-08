@@ -7,113 +7,156 @@
     tools:context="u.nus.edu.marketscanner.MainActivity"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/userNAMEtextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/usernameET"
-        android:layout_alignBottom="@+id/usernameET"
-        android:layout_alignParentStart="true"
-        android:text="Username:" />
-
     <EditText
         android:id="@+id/usernameET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:layout_toEndOf="@+id/userNAMEtextView"
-        android:ems="10"
-        android:inputType="textPersonName" />
-
-    <TextView
-        android:id="@+id/firstNAMEtextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/firstNameET"
-        android:layout_alignBottom="@+id/firstNameET"
         android:layout_alignParentStart="true"
-        android:text="First Name:" />
+        android:layout_marginBottom="18dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/firstNameET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_toEndOf="@+id/firstNAMEtextView"
-        android:inputType="textPersonName"
-        android:layout_below="@+id/usernameET"
-        android:layout_marginBottom="18dp" />
-
-    <TextView
-        android:id="@+id/lastNAMEtextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/lastNameET"
-        android:layout_alignBottom="@+id/lastNameET"
         android:layout_alignParentStart="true"
-        android:text="Last Name:" />
+        android:layout_below="@+id/usernameET"
+        android:layout_marginBottom="18dp"
+        android:ems="10"
+        android:hint="First Name"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/lastNameET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_toEndOf="@+id/lastNAMEtextView"
-        android:inputType="textPersonName"
-        android:layout_below="@+id/firstNameET"
-        android:layout_marginBottom="18dp" />
-
-    <TextView
-        android:id="@+id/passwordtextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/passwordET"
-        android:layout_alignBottom="@+id/passwordET"
         android:layout_alignParentStart="true"
-        android:text="Password:" />
+        android:layout_below="@+id/firstNameET"
+        android:layout_marginBottom="18dp"
+        android:ems="10"
+        android:hint="Last Name"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/passwordET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/lastNameET"
         android:layout_marginBottom="18dp"
-        android:layout_toEndOf="@+id/passwordtextView"
         android:ems="10"
+        android:hint="Password"
         android:inputType="textPassword" />
-
-    <TextView
-        android:id="@+id/cfmPWtextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cfmPWET"
-        android:layout_alignBottom="@+id/cfmPWET"
-        android:layout_alignParentStart="true"
-        android:text="Confirm Password:" />
 
     <EditText
         android:id="@+id/cfmPWET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/passwordET"
         android:layout_marginBottom="18dp"
-        android:layout_toEndOf="@+id/cfmPWtextView"
-        android:ems="8"
+        android:ems="10"
+        android:hint="Confirm Password"
         android:inputType="textPassword" />
-
 
     <Button
         android:id="@+id/signupBtn"
-        style="@android:style/Widget.Button"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create account"
-        android:layout_below="@+id/cfmPWET"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
+        android:text="Sign Up"
+        android:layout_below="@+id/passwordET"
+        android:layout_alignStart="@+id/cfmPWET"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already a member? Login"
+        android:layout_below="@+id/signupBtn"
+        android:layout_alignStart="@+id/passwordET"
         android:layout_alignEnd="@+id/passwordET" />
-
-
-
 </RelativeLayout>
+
+    <!-- <TextView -->
+    <!--    android:id="@+id/lastNAMEtextView" -->
+    <!--    android:layout_width="wrap_content" -->
+    <!--    android:layout_height="wrap_content" -->
+    <!--    android:layout_alignBaseline="@+id/lastNameET" -->
+    <!--    android:layout_alignBottom="@+id/lastNameET" -->
+    <!--    android:layout_alignParentStart="true" -->
+    <!--     android:text="Last Name:" /> -->
+
+    <!-- <EditText-->
+    <!--    android:id="@+id/lastNameET"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!-- android:ems="10"-->
+        <!--android:layout_toEndOf="@+id/lastNAMEtextView"-->
+        <!--android:inputType="textPersonName"-->
+        <!--android:layout_below="@+id/firstNameET"-->
+        <!--android:layout_marginBottom="18dp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/passwordtextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBaseline="@+id/passwordET"-->
+        <!--android:layout_alignBottom="@+id/passwordET"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:text="Password:" />-->
+
+    <!--<EditText-->
+    <!--    android:id="@+id/passwordET"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/lastNameET"-->
+    <!--android:layout_marginBottom="18dp"-->
+    <!--android:layout_toEndOf="@+id/passwordtextView"-->
+    <!--android:ems="10"-->
+    <!--android:inputType="textPassword" />-->
+
+    <!--<TextView-->
+       <!-- android:id="@+id/cfmPWtextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBaseline="@+id/cfmPWET"-->
+        <!--android:layout_alignBottom="@+id/cfmPWET"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:text="Confirm Password:" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/cfmPWET"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/passwordET"-->
+        <!--android:layout_marginBottom="18dp"-->
+        <!--android:layout_toEndOf="@+id/cfmPWtextView"-->
+        <!--android:ems="8"-->
+        <!--android:inputType="textPassword" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/signupBtn"-->
+        <!--style="@android:style/Widget.Button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Create account"-->
+        <!--android:layout_below="@+id/cfmPWET"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_alignEnd="@+id/passwordET" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/link_login"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Already a member? Login"-->
+        <!--android:layout_below="@+id/signupBtn"-->
+        <!--android:layout_alignStart="@+id/passwordET"-->
+        <!--android:layout_marginTop="11dp" />-->

@@ -15,7 +15,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="66dp"
         android:ems="10"
-        android:hint="username"
+        android:hint="Username"
         android:inputType="textPersonName" />
 
     <EditText
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/usernameET"
         android:layout_below="@+id/usernameET"
-        android:hint="password"
+        android:hint="Password"
         android:layout_marginTop="46dp"
         android:ems="10"
         android:inputType="textPassword" />
