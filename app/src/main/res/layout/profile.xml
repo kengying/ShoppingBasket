@@ -14,8 +14,18 @@
         android:layout_height="wrap_content"
         android:text="TextView" />
 
+    <Button
+        android:id="@+id/logoutBtn"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/greetingTV"
+        android:layout_marginStart="15dp" />
+
     <ListView
-        android:layout_below="@+id/greetingTV"
+        android:layout_below="@+id/logoutBtn"
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

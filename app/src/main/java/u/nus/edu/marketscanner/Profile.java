@@ -1,7 +1,9 @@
 package u.nus.edu.marketscanner;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +46,9 @@ public class Profile extends AppCompatActivity {
 
     private TextView greetings = null;
     private TextView ui_no = null;
+    private Button logoutBtn = null;
 
     private int no_of_item = 0;
-    ;
     private String cartID;
     private String cartItemID;
 
@@ -68,6 +72,42 @@ public class Profile extends AppCompatActivity {
 
         greetings = (TextView) findViewById(R.id.greetingTV);
         greetings.setText("Welcome to DA!SO " + user.getFirstName() + " " + user.getLastName());
+
+        logoutBtn = (Button) findViewById(R.id.logoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Profile.this.runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(Profile.this);
+                        View mView = getLayoutInflater().inflate(R.layout.logout_popup, null);
+                        final Button mAdd = (Button) mView.findViewById(R.id.btnAdd);
+                        final Button mCancel = (Button) mView.findViewById(R.id.btnCancel);
+                        mBuilder.setView(mView);
+
+
+                        final AlertDialog dialog = mBuilder.create();
+                        dialog.show();
+                        mCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+                        mAdd.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(Profile.this, Login.class);
+                                i.putExtra("no_of_item", 0);
+                                startActivity(i);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
 
         if (user.getNo_of_carts() != 0) {
             final DatabaseReference userDaata = FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername());
