@@ -12,8 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by ithsirslawragga on 6/7/17.
@@ -54,7 +59,28 @@ public class Sign_Up extends AppCompatActivity {
                 valid = validate(userName.getText().toString(), firstName.getText().toString(), lastName.getText().toString(),
                         password.getText().toString(), cfmPassword.getText().toString());
 
-                if(valid) {
+                Query query = FirebaseDatabase.getInstance().getReference("users").child(userName.getText().toString());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            Toast.makeText(getApplicationContext(), "Username is in database.", Toast.LENGTH_LONG).show();
+                            userName.setError(null);
+                        } else {
+                            Log.d("adding ", "pending");
+                            addUser();
+
+                            Intent i = new Intent(Sign_Up.this, Login.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    }
+
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+               /* if(valid) {
                     Log.d("adding ", "pending");
                     addUser();
 
@@ -63,17 +89,39 @@ public class Sign_Up extends AppCompatActivity {
                     finish();
                 }
             }
-        });
+        }); */
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Sign_Up.this, Login.class);
-                startActivity(i);
-                finish();
+                loginBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(Sign_Up.this, Login.class);
+                        startActivity(i);
+                        finish();
+                    }
+                });
             }
         });
     }
+
+
+   /* private boolean isValidUsername(final String SuserName) {
+        Query query = FirebaseDatabase.getInstance().getReference("users").child(SuserName);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    Toast.makeText(getApplicationContext(), "Username is in database.", Toast.LENGTH_LONG).show();
+                    valid = false;
+                    userName.setError(null);
+                }
+            }
+
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        Log.d("adding ", String.valueOf(valid));
+        return valid;
+    } */
 
     private void addUser() {
         String SuserName = userName.getText().toString();
@@ -81,14 +129,14 @@ public class Sign_Up extends AppCompatActivity {
         String SlastName = lastName.getText().toString();
         String Spassword = password.getText().toString();
 
-        String id = databaseReference.push().getKey();
         user = new User(SuserName, Spassword, SlastName, SfirstName, (long) 0);
 
-        databaseReference.child(id).setValue(user);
-        Toast.makeText(getApplicationContext(), "Sign up successful", Toast.LENGTH_SHORT).show();
+        databaseReference.child("users").setValue(SuserName);
+        databaseReference.child(SuserName).setValue(user);
+        Toast.makeText(getApplicationContext(), "Sign up successful", Toast.LENGTH_LONG).show();
     }
 
-    public boolean validate(final String SuserName, final String SfirstName, final String SlastName, final String Spassword,
+    private boolean validate(final String SuserName, final String SfirstName, final String SlastName, final String Spassword,
                          final String ScfmPassword) {
 
         if (SuserName.isEmpty() || (SuserName.length() < 3)) {
@@ -113,11 +161,36 @@ public class Sign_Up extends AppCompatActivity {
             Log.d("cfm password ", "pending");
         }
 
-        //TODO: add if username is already being used - set valid to false
-
         return valid;
     }
-/*
+
+ /*   private boolean usernameUsed(final String username) {
+        //checking is username is already present in database
+        Query query = FirebaseDatabase.getInstance().getReference("users").child(username);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    User user = dataSnapshot.getValue(User.class);
+                    Log.d("QUERY for user", user.toString());
+                    if (username.equals(user.getUsername())) {
+                        //username is being used
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        if(testing == 0) {
+            return false;
+        }
+        return true;
+    }
+
     private void showDialog() {
         if (!progressDialog.isShowing())
             progressDialog.show();
