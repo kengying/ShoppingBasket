@@ -65,7 +65,7 @@ public class Sign_Up extends AppCompatActivity {
                         if (dataSnapshot.getValue() != null) {
                             Toast.makeText(getApplicationContext(), "Username is in database.", Toast.LENGTH_LONG).show();
                             userName.setError(null);
-                        } else {
+                        } else if(valid) {
                             Log.d("adding ", "pending");
                             addUser();
 

@@ -78,7 +78,7 @@ public class Login extends AppCompatActivity {
                             User user = dataSnapshot.getValue(User.class);
                             Log.d("QUERY for user", user.toString());
                             if(username.equals(user.getUsername()) && password.equals(user.getPassword())){
-                                Intent i = new Intent(Login.this, Profile.class);
+                                Intent i = new Intent(Login.this, MainActivity.class);
                                 i.putExtra("cartID", cartID);
                                 i.putExtra("cartItemID", cartItemID);
                                 i.putExtra("no_of_item", no_of_item);
