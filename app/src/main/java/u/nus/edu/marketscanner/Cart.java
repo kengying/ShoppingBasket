@@ -2,13 +2,16 @@ package u.nus.edu.marketscanner;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -48,6 +51,8 @@ public class Cart extends AppCompatActivity {
     String cartItemID = "";
     DatabaseReference itemID;
     ItemAdapter adapter;
+    TextView header;
+    private double totalCost = 0;
     private User user = new User();
     private String tmpHistory = "";
     private String tmpCartItemID = "";
@@ -57,6 +62,7 @@ public class Cart extends AppCompatActivity {
         // Inflate the usercart_menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.usercheckout_menu, menu);
+        header = (TextView) findViewById(R.id.header);
         final MenuItem checkOutBtn = menu.findItem(R.id.checkOutButton);
         final MenuItem userBtn = menu.findItem(R.id.userButton);
         final View menu_User = userBtn.getActionView();
@@ -177,11 +183,15 @@ public class Cart extends AppCompatActivity {
                                 // itemName.add(dataSnapshot.child("item_Name").getValue(String.class));
                                 // itemName.add(String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
 
+                                totalCost += dataSnapshot.child("item_Price").getValue(Double.class);
+
                                 Log.d("QUERY", dataSnapshot.child("item_Name").getValue(String.class));
                                 Log.d("QUERY", "$" + String.valueOf(dataSnapshot.child("item_Price").getValue(Double.class)));
                                 adapter = new ItemAdapter(getApplicationContext(), R.layout.row_layout, rowItems);
+                                header.setText("Total Cost: $" + String.valueOf(totalCost));
                                 // adapter = new ItemAdapter(getApplicationContext(),R.layout.row_layout);
                                 list.add(dataSnapshot.child("item_Id").getValue(Long.class) + "");
+
                                 list_view.setAdapter(adapter);
                                 if(tmpHistory == null)
                                 registerForContextMenu(list_view);
