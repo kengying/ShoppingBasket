@@ -231,7 +231,9 @@ public class Cart extends AppCompatActivity {
             case R.id.delete_id:
                 Log.d("Cart: ", cartItemID);
                 Log.d("Cart: ", info.position + "");
-
+                Item price = rowItems.get(info.position);
+                totalCost = totalCost - price.getItem_Price();
+                header.setText("Total Cost: $" + String.valueOf(totalCost));
                 itemID.child(list.get(info.position)).removeValue();
                 list.remove(info.position);
                 no_of_item = no_of_item - 1;
