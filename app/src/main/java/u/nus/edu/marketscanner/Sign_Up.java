@@ -90,15 +90,15 @@ public class Sign_Up extends AppCompatActivity {
                 }
             }
         }); */
+            }
+        });
 
-                loginBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent i = new Intent(Sign_Up.this, Login.class);
-                        startActivity(i);
-                        finish();
-                    }
-                });
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Sign_Up.this, Login.class);
+                startActivity(i);
+                finish();
             }
         });
     }
