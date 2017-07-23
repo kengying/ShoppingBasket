@@ -20,12 +20,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/greetingTV"
-        android:layout_marginStart="15dp" />
+        android:layout_marginStart="15dp"
+        android:layout_alignParentBottom="true" />
 
     <ListView
-        android:layout_below="@+id/logoutBtn"
+        android:layout_below="@+id/greetingTV"
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

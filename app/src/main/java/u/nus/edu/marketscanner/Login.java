@@ -66,42 +66,48 @@ public class Login extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 mUsername = (EditText)findViewById(R.id.usernameET);
-                username = mUsername.getText().toString();
                 mPassword = (EditText)findViewById(R.id.passwordET);
                 password = mPassword.getText().toString();
+                username = mUsername.getText().toString();
 
-                Query query = FirebaseDatabase.getInstance().getReference("users").child(username);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue() != null) {
-                            User user = dataSnapshot.getValue(User.class);
-                            Log.d("QUERY for user", user.toString());
-                            if(username.equals(user.getUsername()) && password.equals(user.getPassword())){
-                                Intent i = new Intent(Login.this, MainActivity.class);
-                                i.putExtra("cartID", cartID);
-                                i.putExtra("cartItemID", cartItemID);
-                                i.putExtra("no_of_item", no_of_item);
-                                i.putExtra("user", user);
-                                startActivity(i);
+                if(username.isEmpty() || password.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Please enter username/password", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Query query = FirebaseDatabase.getInstance().getReference("users").child(username);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                User user = dataSnapshot.getValue(User.class);
+                                Log.d("QUERY for user", user.toString());
+                                if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+                                    Intent i = new Intent(Login.this, MainActivity.class);
+                                    i.putExtra("cartID", cartID);
+                                    i.putExtra("cartItemID", cartItemID);
+                                    i.putExtra("no_of_item", no_of_item);
+                                    i.putExtra("user", user);
+                                    startActivity(i);
+                                    Toast.makeText(getApplicationContext(), "Welcome " + user.getUsername(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Password is wrong", Toast.LENGTH_LONG).show();
+                                }
+
                             } else {
-                                Toast.makeText(getApplicationContext(), "Password is wrong", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Username is not in database.", Toast.LENGTH_LONG).show();
                             }
 
+                            mUsername.setText("");
+                            mPassword.setText("");
                         }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Username is not in database.", Toast.LENGTH_LONG).show();
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
+                    });
 
-                        mUsername.setText("");
-                        mPassword.setText("");
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                }
 
             }
         });
