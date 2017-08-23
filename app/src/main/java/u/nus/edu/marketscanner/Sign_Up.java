@@ -144,7 +144,7 @@ public class Sign_Up extends AppCompatActivity {
     private boolean validate(final String SuserName, final String SfirstName, final String SlastName, final String Spassword,
                          final String ScfmPassword) {
         valid = true;
-        
+
         if (SuserName.isEmpty() || (SuserName.length() < 3)) {
             Toast.makeText(getApplicationContext(), "Username must be at least 3 characters", Toast.LENGTH_SHORT).show();
             valid = false;
