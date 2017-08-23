@@ -107,13 +107,16 @@ public class Check_Out extends AppCompatActivity {
                     // Perform action on click
                     String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
 
-                    final DatabaseReference mCart_users = FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername());
-                    mCart_users.child(cartItemID).child("size").setValue(no_of_item);
-                    mCart_users.child(cartItemID).child("amount").setValue(totalPrice.get(0));
-                    mCart_users.child(cartItemID).child("dateTime").setValue(currentDateTime);
+                    if(no_of_item >= 1){
+                    if(user!=null) {
+                        final DatabaseReference mCart_users = FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername());
+                        mCart_users.child(cartItemID).child("size").setValue(no_of_item);
+                        mCart_users.child(cartItemID).child("amount").setValue(totalPrice.get(0));
+                        mCart_users.child(cartItemID).child("dateTime").setValue(currentDateTime);
 
-                    user.setNo_of_carts(user.getNo_of_carts() + 1);
-                    FirebaseDatabase.getInstance().getReference("users").child(user.getUsername()).child("no_of_carts").setValue(user.getNo_of_carts());
+                        user.setNo_of_carts(user.getNo_of_carts() + 1);
+                        FirebaseDatabase.getInstance().getReference("users").child(user.getUsername()).child("no_of_carts").setValue(user.getNo_of_carts());
+                    }
 
 
 //                    FirebaseDatabase.getInstance().getReference("cart_users").child(user.getUsername()).child(user.getNo_of_carts()+1+"").child(cartID).child("size").setValue(no_of_item);
@@ -155,6 +158,11 @@ public class Check_Out extends AppCompatActivity {
                         }
                     });
                 }
+                else
+                    {
+                        Toast.makeText(getApplicationContext(), "Cart is currently empty", Toast.LENGTH_LONG).show();
+                    }
+            }
             });
 
             total.setAdapter(adapter);

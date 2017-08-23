@@ -59,26 +59,31 @@ public class Sign_Up extends AppCompatActivity {
                 valid = validate(userName.getText().toString(), firstName.getText().toString(), lastName.getText().toString(),
                         password.getText().toString(), cfmPassword.getText().toString());
 
-                Query query = FirebaseDatabase.getInstance().getReference("users").child(userName.getText().toString());
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null) {
-                            Toast.makeText(getApplicationContext(), "Username is in database.", Toast.LENGTH_LONG).show();
-                            userName.setError(null);
-                        } else if(valid) {
-                            Log.d("adding ", "pending");
-                            addUser();
+                Log.d("Button ", "is clicked " + valid);
+                if (valid) {
+                    Log.d("Button ", "aksdjf;askdf");
+                    Query query = FirebaseDatabase.getInstance().getReference("users").child(userName.getText().toString());
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                Toast.makeText(getApplicationContext(), "Username is in database.", Toast.LENGTH_LONG).show();
+                                userName.setError(null);
+                            } else if(valid) {
+                                Log.d("adding ", "pending");
+                                addUser();
 
-                            Intent i = new Intent(Sign_Up.this, Login.class);
-                            startActivity(i);
-                            finish();
+                                Intent i = new Intent(Sign_Up.this, Login.class);
+                                startActivity(i);
+                                finish();
+                            }
                         }
-                    }
 
-                    public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
 
                /* if(valid) {
                     Log.d("adding ", "pending");
@@ -131,14 +136,15 @@ public class Sign_Up extends AppCompatActivity {
 
         user = new User(SuserName, Spassword, SlastName, SfirstName, (long) 0);
 
-        databaseReference.child("users").setValue(SuserName);
+        //databaseReference.child("users").setValue(SuserName);
         databaseReference.child(SuserName).setValue(user);
         Toast.makeText(getApplicationContext(), "Sign up successful", Toast.LENGTH_LONG).show();
     }
 
     private boolean validate(final String SuserName, final String SfirstName, final String SlastName, final String Spassword,
                          final String ScfmPassword) {
-
+        valid = true;
+        
         if (SuserName.isEmpty() || (SuserName.length() < 3)) {
             Toast.makeText(getApplicationContext(), "Username must be at least 3 characters", Toast.LENGTH_SHORT).show();
             valid = false;
